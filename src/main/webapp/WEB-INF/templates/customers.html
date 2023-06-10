@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+         .customerList {
+            margin: auto;
+            width: 350px;
+            height: 500px;
+         }
+
+         .customerItem {
+            border: solid 1px;
+            margin: auto;
+            width: 340px;
+            height: 50px;
+            background-color: #00ff40;
+            border-radius: 5px;
+        }
+
+        .customerCreateForm{
+            margin: auto;
+        }
+
+        .customerForm{
+            position: relative;
+            width: 340px;
+            height: 200px;
+            margin-top: 0;
+            margin-bottom: auto;
+        }
+
+
+    </style>
+
+    <script th:inline="javascript">
+    function deleteCustomer(button) {
+        var baseUrl = button.getAttribute('data-baseurl');
+        var customerId = button.getAttribute('data-customerId');
+       fetch(baseUrl+'/customers/'+customerId, {
+        method: 'DELETE'
+        })
+        .then(response => {
+<!--        alert('customer deleted');-->
+        window.location.href = baseUrl+"/customers";
+        })
+    }
+
+
+    </script>
+</head>
+<body style="display: flex;">
+<h1 th:text="'Customers count: ' + ${customers.size()}"></h1>
+
+<div class="customerList">
+    <div class="customerItem" style="display: flex;" th:each="customer: ${customers}">
+        <div class="customerId" style="margin: 3px"><span th:text="${customer.customerId}"></span></div>
+        <div class="customerName" style="margin: 3px"><span th:text="${customer.customerName}"></span></div>
+        <div class="contactName" style="margin: 3px"><span th:text="${customer.contactName}"></span></div>
+        <div class="country" style="margin: 3px"><span th:text="${customer.country}"></span></div>
+        <div style="margin: 5px">
+            <button  type="submit" onclick="deleteCustomer(this)" th:data-baseurl="${baseUrl}"
+                    th:data-customerId="${customer.customerId}">
+                delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="customerCreateForm">
+    <div class="customerForm">
+    <form action="/customers" method="post" >
+        <div>
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" required/>
+        </div>
+        <div>
+            <label for="contactName">Contact Name:</label>
+            <input type="text" id="contactName" name="contactName" required/>
+        </div>
+        <div>
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required/>
+        </div>
+        <div>
+            <button type="submit">Create Customer</button>
+        </div>
+    </form>
+        </div>
+</div>
+</body>
+</html>
